@@ -1363,6 +1363,7 @@ static BROTLI_BOOL BROTLI_NOINLINE BrotliEnsureRingBuffer(
 static BrotliDecoderErrorCode BROTLI_NOINLINE
 SkipMetadataBlock(BrotliDecoderState* s) {
   BrotliBitReader* br = &s->br;
+  int nbytes;
 
   if (s->meta_block_remaining_len == 0) {
     return BROTLI_DECODER_SUCCESS;
@@ -1373,7 +1374,7 @@ SkipMetadataBlock(BrotliDecoderState* s) {
   /* Drain accumulator. */
   if (BrotliGetAvailableBits(br) >= 8) {
     uint8_t buffer[8];
-    int nbytes = (int)(BrotliGetAvailableBits(br)) >> 3;
+    nbytes = (int)(BrotliGetAvailableBits(br)) >> 3;
     BROTLI_DCHECK(nbytes <= 8);
     if (nbytes > s->meta_block_remaining_len) {
       nbytes = s->meta_block_remaining_len;
@@ -1390,7 +1391,7 @@ SkipMetadataBlock(BrotliDecoderState* s) {
   }
 
   /* Direct access to metadata is possible. */
-  int nbytes = (int)BrotliGetRemainingBytes(br);
+  nbytes = (int)BrotliGetRemainingBytes(br);
   if (nbytes > s->meta_block_remaining_len) {
     nbytes = s->meta_block_remaining_len;
   }
